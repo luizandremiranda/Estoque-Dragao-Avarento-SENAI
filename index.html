@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companhia Dragão Avarento - Sistema de Estoque</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=MedievalSharp&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Overlay para menu mobile -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Menu Lateral -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <div class="dragon-icon">🐉</div>
+                <div class="company-info">
+                    <h1 class="company-name">Companhia<br>Dragão Avarento</h1>
+                    <span class="company-subtitle">Guilda de Comerciantes</span>
+                </div>
+            </div>
+            <button class="menu-toggle-desktop" id="menuToggleDesktop">☰</button>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-page="dashboard">
+                <span class="menu-icon">🏰</span>
+                <span class="menu-text">Dashboard</span>
+            </li>
+            <li class="menu-item" data-page="estoque">
+                <span class="menu-icon">📦</span>
+                <span class="menu-text">Estoque</span>
+            </li>
+            <li class="menu-item" data-page="cadastro">
+                <span class="menu-icon">➕</span>
+                <span class="menu-text">Cadastrar Item</span>
+            </li>
+            <li class="menu-item" data-page="pesquisa">
+                <span class="menu-icon">🔍</span>
+                <span class="menu-text">Pesquisa</span>
+            </li>
+            <li class="menu-item" data-page="categorias">
+                <span class="menu-icon">🗂</span>
+                <span class="menu-text">Categorias</span>
+            </li>
+            <li class="menu-item" data-page="relatorios">
+                <span class="menu-icon">📊</span>
+                <span class="menu-text">Relatórios</span>
+            </li>
+            <li class="menu-item" data-page="configuracoes">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-text">Configurações</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="theme-toggle">
+                <button class="theme-btn" id="themeToggle" title="Alternar Tema">
+                    <span class="theme-icon-dark">🌙</span>
+                    <span class="theme-icon-light">☀️</span>
+                </button>
+            </div>
+            <p class="sidebar-version">v1.0.0</p>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <button class="menu-toggle-mobile" id="menuToggleMobile">☰</button>
+                <h2 class="page-title" id="pageTitle">Dashboard</h2>
+            </div>
+            <div class="header-right">
+                <div class="header-search">
+                    <input type="text" id="headerSearchInput" placeholder="Pesquisar itens...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="header-actions">
+                    <button class="fav-btn header-fav-btn" id="headerFavBtn" title="Favoritos">⭐</button>
+                    <button class="notif-btn" id="notifBtn" title="Notificações">
+                        🔔
+                        <span class="notif-badge" id="notifBadge">0</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Páginas -->
+        <div class="page-content">
+            <!-- Dashboard -->
+            <section class="page active" id="page-dashboard">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statTotalItens">0</h3>
+                            <p class="stat-label">Total de Itens</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🗂</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statTotalCategorias">4</h3>
+                            <p class="stat-label">Categorias</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚔️</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statCraft">0</h3>
+                            <p class="stat-label">Itens de Craft</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🛡️</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statEquipamentos">0</h3>
+                            <p class="stat-label">Equipamentos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🧪</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statPocoes">0</h3>
+                            <p class="stat-label">Poções</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✨</div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="statDiversos">0</h3>
+                            <p class="stat-label">Itens Diversos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Últimos Itens Cadastrados</h3>
+                        <div class="card-body" id="lastItems">
+                            <!-- Preenchido via JS -->
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Itens com Pouco Estoque</h3>
+                        <div class="card-body" id="lowStockItems">
+                            <!-- Preenchido via JS -->
+                        </div>
+                    </div>
+                    <div class="dashboard-card full-width">
+                        <h3 class="card-title">Quantidade por Categoria</h3>
+                        <div class="card-body">
+                            <canvas id="categoryChart" width="600" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats-panel">
+                    <h3 class="panel-title">Painel de Estatísticas</h3>
+                    <div class="stats-grid">
+                        <div class="stats-item">
+                            <span class="stats-label">Total de Ouro Investido</span>
+                            <span class="stats-value gold" id="statOuroInvestido">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Valor Total do Estoque</span>
+                            <span class="stats-value gold" id="statValorEstoque">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Itens Mais Raros</span>
+                            <span class="stats-value" id="statItensRaros">-</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Categoria com Mais Itens</span>
+                            <span class="stats-value" id="statCatMaisItens">-</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Classe com Mais Equipamentos</span>
+                            <span class="stats-value" id="statClasseMaisEquip">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estoque -->
+            <section class="page" id="page-estoque">
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                        <input type="text" id="estoqueSearch" placeholder="Pesquisar no estoque..." class="toolbar-input">
+                        <select id="estoqueFiltroCategoria" class="toolbar-select">
+                            <option value="">Todas Categorias</option>
+                            <option value="Equipamentos">Equipamentos</option>
+                            <option value="Craft">Craft</option>
+                            <option value="Poções">Poções</option>
+                            <option value="Itens Diversos">Itens Diversos</option>
+                        </select>
+                        <select id="estoqueFiltroClasse" class="toolbar-select">
+                            <option value="">Todas Classes</option>
+                            <option value="Magos">Magos</option>
+                            <option value="Guerreiros">Guerreiros</option>
+                            <option value="Arqueiros">Arqueiros</option>
+                            <option value="Druidas">Druidas</option>
+                            <option value="Sacerdotes">Sacerdotes</option>
+                            <option value="Ladinos">Ladinos</option>
+                            <option value="Universal">Universal</option>
+                        </select>
+                        <select id="estoqueFiltroRaridade" class="toolbar-select">
+                            <option value="">Todas Raridades</option>
+                            <option value="Comum">Comum</option>
+                            <option value="Incomum">Incomum</option>
+                            <option value="Raro">Raro</option>
+                            <option value="Épico">Épico</option>
+                            <option value="Lendário">Lendário</option>
+                            <option value="Mítico">Mítico</option>
+                            <option value="Divino">Divino</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-right">
+                        <select id="estoqueOrdenacao" class="toolbar-select">
+                            <option value="nome-asc">Nome A-Z</option>
+                            <option value="nome-desc">Nome Z-A</option>
+                            <option value="preco-asc">Preço ↑</option>
+                            <option value="preco-desc">Preço ↓</option>
+                            <option value="quantidade-asc">Quantidade ↑</option>
+                            <option value="quantidade-desc">Quantidade ↓</option>
+                            <option value="raridade">Raridade</option>
+                            <option value="data-desc">Data ↓</option>
+                            <option value="data-asc">Data ↑</option>
+                        </select>
+                        <label class="fav-filter-label">
+                            <input type="checkbox" id="estoqueFiltroFavoritos">
+                            ⭐ Favoritos
+                        </label>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="stock-table" id="stockTable">
+                        <thead>
+                            <tr>
+                                <th>Imagem</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Classe</th>
+                                <th>Raridade</th>
+                                <th>Preço</th>
+                                <th>Qtd</th>
+                                <th>Peso</th>
+                                <th>Descrição</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- Preenchido via JS -->
+                </div>
+            </section>
+
+            <!-- Cadastro -->
+            <section class="page" id="page-cadastro">
+                <div class="form-container">
+                    <h3 class="form-title">Cadastrar Novo Item</h3>
+                    <form id="cadastroForm" class="rpg-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="itemName">Nome do Item *</label>
+                                <input type="text" id="itemName" required placeholder="Ex: Espada Longa de Ferro">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemImagem">Imagem (URL ou Upload)</label>
+                                <input type="text" id="itemImagem" placeholder="URL da imagem">
+                                <input type="file" id="itemImagemFile" accept="image/*" class="file-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemCategoria">Categoria *</label>
+                                <select id="itemCategoria" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Equipamentos">⚔️ Equipamentos</option>
+                                    <option value="Craft">🔨 Craft</option>
+                                    <option value="Poções">🧪 Poções</option>
+                                    <option value="Itens Diversos">✨ Itens Diversos</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemClasse">Classe *</label>
+                                <select id="itemClasse" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Magos">🧙 Magos</option>
+                                    <option value="Guerreiros">⚔️ Guerreiros</option>
+                                    <option value="Arqueiros">🏹 Arqueiros</option>
+                                    <option value="Druidas">🌿 Druidas</option>
+                                    <option value="Sacerdotes">✝️ Sacerdotes</option>
+                                    <option value="Ladinos">🗡️ Ladinos</option>
+                                    <option value="Universal">🌟 Universal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemRaridade">Raridade *</label>
+                                <select id="itemRaridade" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Comum">⚪ Comum</option>
+                                    <option value="Incomum">🟢 Incomum</option>
+                                    <option value="Raro">🔵 Raro</option>
+                                    <option value="Épico">🟣 Épico</option>
+                                    <option value="Lendário">🟠 Lendário</option>
+                                    <option value="Mítico">🔴 Mítico</option>
+                                    <option value="Divino">🟡 Divino</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemPreco">Preço (Ouro) *</label>
+                                <input type="number" id="itemPreco" required min="0" step="0.01" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemQuantidade">Quantidade *</label>
+                                <input type="number" id="itemQuantidade" required min="0" placeholder="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemPeso">Peso (kg) *</label>
+                                <input type="number" id="itemPeso" required min="0" step="0.1" placeholder="0.0">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="itemDescricao">Descrição</label>
+                                <textarea id="itemDescricao" rows="3" placeholder="Descrição do item..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemFornecedor">Fornecedor</label>
+                                <input type="text" id="itemFornecedor" placeholder="Nome do fornecedor">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemData">Data de Cadastro</label>
+                                <input type="date" id="itemData">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-medieval">
+                                <span class="btn-icon">💾</span> Salvar Item
+                            </button>
+                            <button type="reset" class="btn btn-secondary btn-medieval">
+                                <span class="btn-icon">🔄</span> Limpar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Pesquisa -->
+            <section class="page" id="page-pesquisa">
+                <div class="search-container">
+                    <div class="search-header">
+                        <h3 class="search-title">Pesquisa Avançada</h3>
+                        <p class="search-subtitle">Pesquise em tempo real por nome, categoria, classe, raridade ou descrição</p>
+                    </div>
+                    <div class="search-filters">
+                        <input type="text" id="pesquisaInput" placeholder="Digite para pesquisar..." class="search-input">
+                        <div class="filter-group">
+                            <select id="pesquisaFiltroCategoria" class="filter-select">
+                                <option value="">Todas Categorias</option>
+                                <option value="Equipamentos">Equipamentos</option>
+                                <option value="Craft">Craft</option>
+                                <option value="Poções">Poções</option>
+                                <option value="Itens Diversos">Itens Diversos</option>
+                            </select>
+                            <select id="pesquisaFiltroClasse" class="filter-select">
+                                <option value="">Todas Classes</option>
+                                <option value="Magos">Magos</option>
+                                <option value="Guerreiros">Guerreiros</option>
+                                <option value="Arqueiros">Arqueiros</option>
+                                <option value="Druidas">Druidas</option>
+                                <option value="Sacerdotes">Sacerdotes</option>
+                                <option value="Ladinos">Ladinos</option>
+                                <option value="Universal">Universal</option>
+                            </select>
+                            <select id="pesquisaFiltroRaridade" class="filter-select">
+                                <option value="">Todas Raridades</option>
+                                <option value="Comum">Comum</option>
+                                <option value="Incomum">Incomum</option>
+                                <option value="Raro">Raro</option>
+                                <option value="Épico">Épico</option>
+                                <option value="Lendário">Lendário</option>
+                                <option value="Mítico">Mítico</option>
+                                <option value="Divino">Divino</option>
+                            </select>
+                        </div>
+                        <div class="filter-range">
+                            <div class="range-group">
+                                <label>Preço Mín:</label>
+                                <input type="number" id="pesquisaPrecoMin" min="0" placeholder="0">
+                            </div>
+                            <div class="range-group">
+                                <label>Preço Máx:</label>
+                                <input type="number" id="pesquisaPrecoMax" min="0" placeholder="9999">
+                            </div>
+                            <div class="range-group">
+                                <label>Qtd Mín:</label>
+                                <input type="number" id="pesquisaQtdMin" min="0" placeholder="0">
+                            </div>
+                            <div class="range-group">
+                                <label>Qtd Máx:</label>
+                                <input type="number" id="pesquisaQtdMax" min="0" placeholder="9999">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-results" id="searchResults">
+                        <!-- Preenchido via JS -->
+                    </div>
+                    <div class="search-stats" id="searchStats">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categorias -->
+            <section class="page" id="page-categorias">
+                <div class="categorias-container">
+                    <h3 class="section-title">Categorias do Estoque</h3>
+                    <div class="categorias-grid" id="categoriasGrid">
+                        <!-- Preenchido via JS -->
+                    </div>
+
+                    <h3 class="section-title mt-4">Classes</h3>
+                    <div class="classes-grid" id="classesGrid">
+                        <!-- Preenchido via JS -->
+                    </div>
+
+                    <h3 class="section-title mt-4">Raridades</h3>
+                    <div class="raridades-grid" id="raridadesGrid">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Relatórios -->
+            <section class="page" id="page-relatorios">
+                <div class="relatorios-container">
+                    <h3 class="section-title">Relatórios do Estoque</h3>
+
+                    <div class="relatorio-grid">
+                        <div class="relatorio-card">
+                            <h4>Quantidade por Categoria</h4>
+                            <div class="relatorio-body" id="relCatQuantidade">
+                                <!-- Preenchido via JS -->
+                            </div>
+                        </div>
+                        <div class="relatorio-card">
+                            <h4>Quantidade por Classe</h4>
+                            <div class="relatorio-body" id="relClasseQuantidade">
+                                <!-- Preenchido via JS -->
+                            </div>
+                        </div>
+                        <div class="relatorio-card">
+                            <h4>Valor Total do Estoque</h4>
+                            <div class="relatorio-body" id="relValorEstoque">
+                                <!-- Preenchido via JS -->
+                            </div>
+                        </div>
+                        <div class="relatorio-card">
+                            <h4>Itens Mais Caros</h4>
+                            <div class="relatorio-body" id="relItensCaros">
+                                <!-- Preenchido via JS -->
+                            </div>
+                        </div>
+                        <div class="relatorio-card full-width">
+                            <h4>Itens com Menor Estoque</h4>
+                            <div class="relatorio-body" id="relMenorEstoque">
+                                <!-- Preenchido via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relatorio-actions">
+                        <button class="btn btn-primary btn-medieval" id="btnExportJSON">
+                            <span class="btn-icon">📄</span> Exportar JSON
+                        </button>
+                        <button class="btn btn-primary btn-medieval" id="btnExportCSV">
+                            <span class="btn-icon">📊</span> Exportar CSV
+                        </button>
+                        <button class="btn btn-primary btn-medieval" id="btnImprimir">
+                            <span class="btn-icon">🖨️</span> Imprimir
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configurações -->
+            <section class="page" id="page-configuracoes">
+                <div class="config-container">
+                    <h3 class="section-title">Configurações do Sistema</h3>
+
+                    <div class="config-grid">
+                        <div class="config-card">
+                            <h4>Alterar Tema</h4>
+                            <div class="config-body">
+                                <p>Alterne entre tema escuro e tema claro.</p>
+                                <button class="btn btn-secondary btn-medieval" id="configThemeToggle">
+                                    <span class="btn-icon">🎨</span> Alternar Tema
+                                </button>
+                            </div>
+                        </div>
+                        <div class="config-card">
+                            <h4>Trocar Logo</h4>
+                            <div class="config-body">
+                                <p>Altere o logo da Companhia Dragão Avarento.</p>
+                                <input type="file" id="configLogoUpload" accept="image/*" class="file-input">
+                                <img id="configLogoPreview" class="logo-preview" src="" alt="Logo atual" style="display:none;">
+                            </div>
+                        </div>
+                        <div class="config-card">
+                            <h4>Trocar Nome da Empresa</h4>
+                            <div class="config-body">
+                                <input type="text" id="configCompanyName" placeholder="Novo nome da empresa" class="config-input">
+                                <button class="btn btn-secondary btn-medieval" id="configSaveName">
+                                    <span class="btn-icon">💾</span> Salvar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="config-card danger">
+                            <h4>Limpar Banco de Dados</h4>
+                            <div class="config-body">
+                                <p>Remove todos os itens do estoque. Esta ação não pode ser desfeita.</p>
+                                <button class="btn btn-danger btn-medieval" id="configClearDB">
+                                    <span class="btn-icon">🗑️</span> Limpar Tudo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="config-card">
+                            <h4>Restaurar Dados Iniciais</h4>
+                            <div class="config-body">
+                                <p>Restaura os 30 itens iniciais do sistema.</p>
+                                <button class="btn btn-secondary btn-medieval" id="configRestoreDB">
+                                    <span class="btn-icon">🔄</span> Restaurar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Visualização -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalItemName"></h2>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal modal-confirm">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirmar Exclusão</h2>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Tem certeza que deseja excluir este item?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-danger btn-medieval" id="btnConfirmDelete">Sim, Excluir</button>
+                <button class="btn btn-secondary btn-medieval" id="btnCancelDelete">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal modal-edit">
+            <button class="modal-close" id="editModalClose">✕</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Item</h2>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" class="rpg-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editName">Nome</label>
+                            <input type="text" id="editName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editImagem">Imagem URL</label>
+                            <input type="text" id="editImagem">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCategoria">Categoria</label>
+                            <select id="editCategoria" required>
+                                <option value="Equipamentos">Equipamentos</option>
+                                <option value="Craft">Craft</option>
+                                <option value="Poções">Poções</option>
+                                <option value="Itens Diversos">Itens Diversos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editClasse">Classe</label>
+                            <select id="editClasse" required>
+                                <option value="Magos">Magos</option>
+                                <option value="Guerreiros">Guerreiros</option>
+                                <option value="Arqueiros">Arqueiros</option>
+                                <option value="Druidas">Druidas</option>
+                                <option value="Sacerdotes">Sacerdotes</option>
+                                <option value="Ladinos">Ladinos</option>
+                                <option value="Universal">Universal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRaridade">Raridade</label>
+                            <select id="editRaridade" required>
+                                <option value="Comum">Comum</option>
+                                <option value="Incomum">Incomum</option>
+                                <option value="Raro">Raro</option>
+                                <option value="Épico">Épico</option>
+                                <option value="Lendário">Lendário</option>
+                                <option value="Mítico">Mítico</option>
+                                <option value="Divino">Divino</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPreco">Preço</label>
+                            <input type="number" id="editPreco" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantidade">Quantidade</label>
+                            <input type="number" id="editQuantidade" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPeso">Peso</label>
+                            <input type="number" id="editPeso" min="0" step="0.1" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="editDescricao">Descrição</label>
+                            <textarea id="editDescricao" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFornecedor">Fornecedor</label>
+                            <input type="text" id="editFornecedor">
+                        </div>
+                    </div>
+                    <input type="hidden" id="editId">
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-medieval">
+                            <span class="btn-icon">💾</span> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações -->
+    <div class="notifications" id="notifications">
+        <!-- Preenchido via JS -->
+    </div>
+
+    <!-- Favoritos (modal) -->
+    <div class="modal-overlay" id="favModal">
+        <div class="modal">
+            <button class="modal-close" id="favModalClose">✕</button>
+            <div class="modal-header">
+                <h2 class="modal-title">⭐ Itens Favoritos</h2>
+            </div>
+            <div class="modal-body" id="favModalBody">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="database.js"></script>
+    <script src="utils.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="estoque.js"></script>
+    <script src="cadastro.js"></script>
+    <script src="pesquisa.js"></script>
+    <script src="relatorios.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
